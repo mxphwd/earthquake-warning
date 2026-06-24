@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct SourcesView: View {
+    let localize: (String, Locale) -> String
+    let locale: Locale
     // Simple model of sources; adjust URLs/text as needed
     private let sources: [(flag: String, country: String, name: String, url: String)] = [
         ("🇰🇷", "Korea", "Korea Meteorological Administration", "https://www.kma.go.kr/"),
@@ -16,10 +18,10 @@ struct SourcesView: View {
                             .font(.system(size: 28))
                             .frame(width: 34)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(src.country)
+                            Text(localize(src.country, locale))
                                 .font(.headline)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(src.name)
+                                Text(localize(src.name, locale))
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                                 if let url = URL(string: src.url) {
@@ -33,14 +35,16 @@ struct SourcesView: View {
                     .padding(.vertical, 4)
                 }
             } footer: {
-                Text("These links open in your default browser.")
+                Text(localize("These links open in your default browser.", locale))
             }
         }
-        .navigationTitle("Sources")
+        .navigationTitle(localize("Sources", locale))
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    NavigationStack { SourcesView() }
+    NavigationStack {
+        SourcesView(localize: { key, locale in key }, locale: .current)
+    }
 }

@@ -21,27 +21,7 @@ enum EarthquakeRegion: String {
     case taiwan = "臺灣 (繁體中文)"
 }
 
-final class EarthquakeWarningService {
-    static let shared = EarthquakeWarningService()
-    private init() {}
-
-    // Entry point used by ContentView
-    func fetchWarnings(for selectedRegion: String) async throws -> [EarthquakeWarning] {
-        guard let region = EarthquakeRegion(rawValue: selectedRegion) else {
-            return []
-        }
-        switch region {
-        case .korea:
-            let items = try await fetchKMA()
-            return items.map { EarthquakeWarning(title: $0.title, description: $0.description, receivedAt: $0.receivedAt) }
-        case .chinaMainland:
-            let items = try await fetchCENCOrUSGS()
-            return items.map { EarthquakeWarning(title: $0.title, description: $0.description, receivedAt: $0.receivedAt) }
-        case .taiwan:
-            let items = try await fetchCWA()
-            return items.map { EarthquakeWarning(title: $0.title, description: $0.description, receivedAt: $0.receivedAt) }
-        }
-    }
+extension EarthquakeWarningService {
 
     // MARK: - Korea (KMA)
     // KMA provides an Atom feed for earthquake info (example public feed)
@@ -250,3 +230,4 @@ private extension String {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
+
